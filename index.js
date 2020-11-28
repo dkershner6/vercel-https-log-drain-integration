@@ -24,7 +24,7 @@ module.exports = withUiHook(async ({ payload, vercelClient }) => {
         await deleteAllOldLogDrains();
         store.drainUrl = clientState.drainUrl;
 
-        if (store?.drainUrl && store.drainUrl.length > 0) {
+        if (store && store.drainUrl && store.drainUrl.length > 0) {
             const body = JSON.stringify({
                 name: "HTTPS Log Drain",
                 type: "json",
@@ -44,6 +44,8 @@ module.exports = withUiHook(async ({ payload, vercelClient }) => {
         await vercelClient.setMetadata(store);
     }
 
+    const drainUrl = store && store.drainUrl ? store.drainUrl : "";
+
     return htm`
     <Page>
         ${
@@ -60,9 +62,7 @@ module.exports = withUiHook(async ({ payload, vercelClient }) => {
         <Box display="flex" justifyContent="space-between">
             
             <Box flex="1">
-                <Input label="Log Drain URL" name="drainUrl" width="100%" value="${
-                    store?.drainUrl ?? ""
-                }" />          
+                <Input label="Log Drain URL" name="drainUrl" width="100%" value="${drainUrl}" />          
             </Box>
             <Box margin="20px" alignSelf="center">
                 <Button action="submit">Submit</Button>
